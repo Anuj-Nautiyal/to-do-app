@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import "tailwindcss";
+
+:root{
+  --color-right: oklch(62.7% 0.265 303.9);
+  --color-left: oklch(65.6% 0.241 354.308);
+  --color-text: oklch(10.2% 0.000 0.000);
+}
+
+body{
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
