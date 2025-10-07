@@ -7,11 +7,8 @@ function App() {
   const [task, setTask] = useState("")
   const [taskList, setTaskList] = useState([])
   const [isEditing, setIsEditing] = useState(false)
+  const [editingTaskId, setEditingTaskId] = useState(null)
   const [showFinished, setShowFinished] = useState(false)
-
-  const saveToLocalStorage = () => {
-    localStorage.setItem("tasks", JSON.stringify(taskList))
-  }
 
   useEffect(() => {
     let data = localStorage.getItem("tasks")
@@ -20,18 +17,29 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(taskList))
+  }, [taskList])
+
   const handleChange = (e) => {
     setTask(e.target.value)
   }
 
   const handleAdd = () => {
     if (isEditing) {
+      setTaskList(taskList.map(item => {
+        if (item.id === editingTaskId) {
+          return { ...item, task: task }
+        }
+        return item
+      }))
       setIsEditing(false)
+      setEditingTaskId(null)
+    } else{
+      setTaskList([...taskList, { id: uuidv4(), task, isCompleted: false }])
     }
-    setTaskList([...taskList, { id: uuidv4(), task, isCompleted: false }])
     setTask("")
-    saveToLocalStorage()
-  }
+}
 
   const handleCheckbox = (e) => {
     let id = e.target.name
@@ -42,22 +50,19 @@ function App() {
       return item
     })
     setTaskList(newTaskList)
-    saveToLocalStorage()
   }
 
   const handleEdit = (id) => {
     setIsEditing(true)
+    setEditingTaskId(id)
     let editedTask = taskList.filter(item => item.id === id)
     setTask(editedTask[0].task)
-    handleDelete(id)
-    saveToLocalStorage()
   }
 
   const handleDelete = (id) => {
     let newTaskList = taskList.filter((item) => item.id !== id)
     setTaskList(newTaskList)
-    saveToLocalStorage()
-  }
+  } 
 
   const toggleFinished = (e) => {
     setShowFinished(!showFinished)
