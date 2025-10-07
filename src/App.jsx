@@ -160,8 +160,7 @@ function App() {
     inputRef.current.focus();
   }
 
-  const handleCheckbox = (e) => {
-    let id = e.target.name
+  const handleToggleComplete = (id) => {
     let newTaskList = taskList.map((item) => {
       if (item.id === id) {
         return { ...item, isCompleted: !item.isCompleted }
@@ -169,6 +168,10 @@ function App() {
       return item
     })
     setTaskList(newTaskList)
+  }
+
+  const handleCheckbox = (e) => {
+    handleToggleComplete(e.target.name)
   }
 
   const handleEdit = (id) => {
@@ -217,8 +220,8 @@ function App() {
           {taskList.map((item) => {
             return (showFinished || !item.isCompleted) && <div key={item.id} className="task flex sm:flex-row justify-between items-center gap-2 sm:gap-0">
               <div className="taskSection flex gap-3 items-center w-full">
-                <input onChange={handleCheckbox} type="checkbox" checked={item.isCompleted} name={item.id} id="" className='min-w-4 min-h-4' />
-                <p className={`w-full break-words ${item.isCompleted ? "line-through text-gray-500" : ""}`}>{item.task}</p>
+                <input onChange={handleCheckbox} type="checkbox" checked={item.isCompleted} name={item.id} id="completed" className='min-w-4 min-h-4' />
+                <p onClick={() => handleToggleComplete(item.id)} id="completed" className={`w-full break-words cursor-pointer ${item.isCompleted ? "line-through text-gray-500" : ""}`}>{item.task}</p>
               </div>
               <div className="side-buttons flex gap-2 self-end sm:self-center">
                 <button onClick={() => handleEdit(item.id)} className='bg-[var(--color-right)] text-white cursor-pointer poppins-regular p-2 md:px-4 md:py-2 rounded-lg hover:bg-[var(--color-left)] active:scale-95 transition-colors'><FaRegEdit /></button>
